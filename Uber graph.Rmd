@@ -1,0 +1,38 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+Transportation <- read.csv("~/Downloads/Transportation_Network_Providers_-_Vehicles.csv")
+Transportation$NUMBER_OF_TRIPS[which(Transportation$NUMBER_OF_TRIPS==0)]=NA_character_
+Transportation2 <- na.omit(Transportation,cols='NUMBER_OF_TRIPS')
+Transportation2$NUMBER_OF_TRIPS <- as.numeric(Transportation2$NUMBER_OF_TRIPS)
+```
+##Histogram
+```{r}
+hist(Transportation2$NUMBER_OF_TRIPS,breaks = 20,freq=TRUE)
+summary(Transportation2$NUMBER_OF_TRIPS)
+```
+##Piechart
+```{r}
+pie(summary(Transportation2$MULTIPLE_TNPS),main='Pie chart of multiple TNPs',labels = c('false 87%','true 13%'))
+summary(Transportation2$MULTIPLE_TNPS)
+```
+##Overlay Barchart
+```{r}
+library(ggplot2)
+ggplot()+
+  geom_bar(data=Transportation2,
+           aes(x=factor(Transportation2$NUMBER_OF_TRIPS),
+               fill=factor(Transportation2$MULTIPLE_TNPS)),
+           position = 'fill')+
+  scale_x_discrete('Number of Trips',breaks=c(100,200,300,400,500,600,700,800,900))+
+  scale_y_continuous('Percent')+
+  guides(fill=guide_legend(title='Multiple TNPs'))+
+  scale_fill_manual(values = c('blue','red'))
+```
+
+
+
+
